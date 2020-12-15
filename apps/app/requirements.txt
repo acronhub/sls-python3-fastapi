@@ -1,0 +1,4 @@
+mangum
+fastapi
+jinja2
+aiofiles

@@ -1,0 +1,99 @@
+# Welcome to Serverless!
+#
+# This file is the main config file for your service.
+# It's very minimal at this point and uses default values.
+# You can always add more config options for more control.
+# We've included some commented out config examples here.
+# Just uncomment any of them to get that config option.
+#
+# For full config options, check the docs:
+#    docs.serverless.com
+#
+# Happy Coding!
+
+service: sls-python-fastapi
+# app and org for use with dashboard.serverless.com
+#app: your-app-name
+#org: your-org-name
+
+# You can pin your service to only deploy with a specific Serverless version
+# Check out our docs for more details
+frameworkVersion: ">=2.0.0 <3.0.0"
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-python-requirements
+
+custom:
+  defaultStage: dev # 初期値の環境
+
+  # AWSの接続先（aws_credentials）
+  profiles:
+    dev: default
+    prod: default
+  prune:
+    automatic: true
+    number: 3
+
+#  pythonRequirements:
+#    noDeploy: []
+
+# AWSに反映する設定定義
+provider:
+  name: aws
+  runtime: python3.8
+  region: ap-northeast-1
+  stage: ${opt:stage, self:custom.defaultStage}
+  profile: ${self:custom.profiles.${self:provider.stage}}
+  environment:
+    ENV: ${self:provider.stage}
+  tags:
+    Name: ${self:service}
+
+# you can add statements to the Lambda function's IAM Role here
+#  iamRoleStatements:
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:ListBucket"
+#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+#    - Effect: "Allow"
+#      Action:
+#        - "s3:PutObject"
+#      Resource:
+#        Fn::Join:
+#          - ""
+#          - - "arn:aws:s3:::"
+#            - "Ref" : "ServerlessDeploymentBucket"
+#            - "/*"
+
+# you can add packaging information here
+package:
+  exclude:
+    - .gitignore
+    - __pycache__/**
+    - static/**
+
+# APIリスト
+# https://serverless.com/framework/docs/providers/aws/guide/events/
+# https://serverless.com/framework/docs/providers/aws/guide/serverless.yml/
+functions:
+  main:
+    handler: main.handler
+    events: # All events associated with this function
+      - http:
+          path: /{path+}
+          method: ANY
+          private: false
+          cors: true
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    NewResource:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: resources-${self:provider.stage}-sls-python-fastapi
+#  Outputs:
+#     NewOutput:
+#       Description: "Description for the output"
+#       Value: "Some output value"

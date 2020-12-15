@@ -1,0 +1,16 @@
+{
+  "name": "sls-python-fastapi",
+  "version": "0.1.0",
+  "description": "サンプル",
+  "main": "app.main.py",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy": "sh bin/deploy.sh"
+  },
+  "author": "acronhub[https://github.com/acronhub]",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless-prune-plugin": "^1.4.3",
+    "serverless-python-requirements": "^5.1.0"
+  }
+}
